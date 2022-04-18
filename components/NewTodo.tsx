@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { addTodo } from '../telefunc/todo.telefunc'
+import { onNewTodo } from './NewTodo.telefunc'
 
 export default function NewTodo({ refetch }: { refetch: () => void }) {
   const [title, setTitle] = useState('')
@@ -11,7 +11,7 @@ export default function NewTodo({ refetch }: { refetch: () => void }) {
       onSubmit={async (e) => {
         e.preventDefault()
         if (!title || !content) return
-        await addTodo({ title, content })
+        await onNewTodo({ title, content })
         setTitle('')
         setContent('')
         refetch()

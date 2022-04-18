@@ -1,9 +1,14 @@
 // https://github.com/s-kris/vite-ssr-starter/blob/master/server/index.ts
-import { json, urlencoded } from 'body-parser'
+import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import { Router } from 'express'
 import { IncomingMessage, ServerResponse } from 'http'
-import NextAuth, { NextAuthOptions } from 'next-auth'
+import { createRequire } from 'module'
+import type { NextAuthOptions } from 'next-auth'
+
+const require = createRequire(import.meta.url)
+
+const NextAuth = require('next-auth').default as typeof import('next-auth').default
 
 /**
  * Should match the following paths:
@@ -25,8 +30,8 @@ const router = Router()
 /** Compatibility layer for `next-auth` for `express` apps.  */
 export default function NextAuthMiddleware(options: NextAuthOptions) {
   return router
-    .use(urlencoded({ extended: false }))
-    .use(json())
+    .use(bodyParser.urlencoded({ extended: false }))
+    .use(bodyParser.json())
     .use(cookieParser())
     .all(authActions, (req: IncomingMessage, res: ServerResponse, next) => {
       if (req.method !== 'POST' && req.method !== 'GET') {

@@ -1,35 +1,42 @@
 import { Todo } from '@prisma/client'
 import React, { useEffect, useState } from 'react'
-import { deleteTodo, getTodos, toggleTodo } from '../telefunc/todo.telefunc'
+import {onDeleteTodo, onToggleTodo, onGetTodos} from './TodoList.telefunc'
 import NewTodo from './NewTodo'
 
 export { TodoList }
 
 function TodoItem({ refetch, ...todo }: Todo & { refetch: () => void }) {
+  const textStyle = {
+    textDecoration: todo.completed ? 'line-through' : undefined
+  }
+
   return (
-    <li key={todo.id}>
+   <li key={todo.id}>
       <h2>
-        {todo.title}{' '}
+        <span style={textStyle}>{todo.title}</span>
+        <input
+          type="checkbox"
+          checked={todo.completed}
+          onChange={async () => {
+            await onToggleTodo(todo.id)
+            refetch()
+          }}
+          style={{ cursor: 'pointer', margin: 13 }}
+        />
         <button
-          id={'toggle-' + todo.title}
+          className="remove"
           onClick={async () => {
-            await toggleTodo(todo.id)
+            await onDeleteTodo(todo.id)
             refetch()
           }}
         >
-          {todo.completed ? '✅ done' : '❌ undone'}
+          remove
         </button>
       </h2>
-      <p>{todo.content}</p>
-      <button
-        id={'remove-' + todo.title}
-        onClick={async () => {
-          await deleteTodo(todo.id)
-          refetch()
-        }}
-      >
-        remove
-      </button>
+      <p>
+        <span style={textStyle}>{todo.content}</span>
+        {todo.completed && ' ✅ done'}
+      </p>
     </li>
   )
 }
@@ -38,7 +45,7 @@ function TodoList() {
   const [todoItems, setTodoItems] = useState<Todo[]>([])
 
   const fetch = async () => {
-    setTodoItems(await getTodos())
+    setTodoItems(await onGetTodos())
   }
 
   useEffect(() => {
@@ -47,12 +54,11 @@ function TodoList() {
 
   return (
     <>
-      <hr />
       <NewTodo refetch={fetch} />
       <hr />
       <ul>
-        {todoItems.map((todoItem, i) => (
-          <TodoItem key={i} refetch={fetch} {...todoItem} />
+        {todoItems.map((todoItem) => (
+          <TodoItem key={todoItem.id} refetch={fetch} {...todoItem} />
         ))}
       </ul>
     </>
