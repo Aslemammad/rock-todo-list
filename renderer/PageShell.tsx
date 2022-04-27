@@ -5,8 +5,8 @@ import type { PageContext } from "./types";
 import { Link } from "./Link";
 import { Session } from "next-auth";
 import ReactGA from "react-ga";
-const TRACKING_ID = "UA-204034316-1"; // OUR_TRACKING_ID
-ReactGA.initialize(process.env.TRACKING_ID as string);
+
+ReactGA.initialize(process.env.GOOGLE_ANALYTICS_TRACKING_ID as string);
 
 export { PageShell };
 
