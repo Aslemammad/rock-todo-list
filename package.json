@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "pnpm run dev",
-    "dev": "NODE_ENV=development esmo ./server/index.ts",
+    "dev": "SET NODE_ENV=development & esmo ./server/index.ts",
     "prod": "pnpm run build && pnpm run prod:serve",
     "// Build for production": "",
     "build": "pnpm run build:clean && pnpm run build:vite && npm run build:prerender",
@@ -9,7 +9,8 @@
     "build:vite": "vite build && vite build --ssr",
     "build:prerender": "vite-plugin-ssr prerender",
     "// Static serve for production": "",
-    "prod:serve": "serve dist/client/ --listen 3000"
+    "prod:serve": "serve dist/client/ --listen 3000",
+    "prisma": "npx prisma db push"
   },
   "dependencies": {
     "@brillout/json-s": "^0.4.5",
@@ -30,8 +31,10 @@
     "next-auth": "3",
     "node-fetch": "2",
     "prisma": "3.5.0",
+    "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-ga": "^3.3.0",
     "rimraf": "^3.0.2",
     "serve": "^12.0.1",
     "telefunc": "^0.1.19",
